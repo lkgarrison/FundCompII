@@ -1,0 +1,46 @@
+Luke Garrison
+Report.txt
+Lab 4
+
+The user is able to use the blackjack program by starting the program and then following the in-program instructions. When the program starts, it gives the player their current total after their two dealt cards, along with the value of the dealer's first card (in actual blackjack, only 1 of the dealer's cards are visible to the players). Using this information, the player is then able to decide whether to hit or stand (take a card or be done). The user will simply enter "h" or "s" to specify their choice, which is explained before the user is prompted. Any other characters entered here (capital H and S are accepted as well) will cause a message to be displayed prompting the user to retry with valid input or "s" or "h". If the user specifies "s". then the round is over for the player, the dealer will take cards until the dealer's total is at least 17, and the winner will be reported. If the user enters "h" to hit, then another card from the deck is randomly added to the user's total. If the player's new card put the player's total over 21, then the player loses. Otherwise, the player is prompted to hit or stay again. This option repeats until the user hits and exceeds 21 or the user stands. After each hand is ended, the program reports who won, followed by an update on the score in the series of the player vs the dealer. After each hand, the user is also prompted to play again. If the user enters "y" for yes, then this whole process is complete for a new hand (although the cards played in the first deck are still gone). If the user enters "n" for no, then the game is ended and a summary message is displayed, recapping the series against the dealer. 
+
+I decided to incorporate my blackjack as a separate method within my blackjack CardDeck class. My reasoning is that I would have made a main method and written all the same logic there, simply utilizing composition to instantiate a CardDeck with the deal() method. Instead, since the card deck is for blackjack, I simply made a play() member function for the BJCardDeck class that will execute the logic to play blackjack. 
+
+The method sets variables to keep track of dealer and player wins, as well as creating local variables to store the dealer's first card, the dealer's current total, the player's current total, if the dealer is done, and if the player is done. Then 2 cards are dealt to both the player and the dealer. The dealer's first card is always displayed to the player. Then, the result of the initial deal must be analyzed, especially because 2 aces means a total of 22, which means you lose. Thus, if both the player and the dealer are dealt 2 aces, a tie is called since both went over 21 and neither were able to make any decisions. However, if only the player goes over 21, then the player loses, and there is no need to continue the hand. If only the dealer goes over 21, then the player must still play, but the dealer will not draw more cards, whether the player busts or not. If the player is dealt 21, then they got a natural blackjack, and autmatically accept it by not taking any more cards (basically a feature for the user, in case they don't realize they got 21 off the deal and should stand). 
+
+After this, the player, if at or over 21, will be prompted on whether to hit or stay after being given his/her score relative to the dealer's first card. If the dealer chooses hit, then a card is dealt from the deck and added to the player's total. Whether or not the player hits, after this, if the player's total is at or over 21, then the player's turn is automatically over. Then the dealer will take his turn, as long as the dealer was not dealt more than 16 and al long as the player didn't already bust. During his turn, the dealer will accpet cards until his total equals or exceeds 17. Then, both the player and the dealer are done taking cards and the totals are analyzed to determine the winner. If the player exceeded 21, they automatically lose. But if the player didn't and the dealer did exceed 21, then the player wins. If they did not exceed 21 but the scores are equal, then it is a tie, or a "push". If none of the above and the player's total is greater than the dealer's, then the player wins. If none of the above and the dealer's total is greater than the player's, the dealer wins. 
+
+The score tally is then displayed and the user is prompted of whether to play again or not until a capital or lowercase "y" or "n" is entered. If the user enters "y", then this whole process is completed, and the score tallies are preserved. If the user enteres "n", then a summary of the series is displayed and the method is finished. 
+
+It is worth noting how to addDeck() method works. Instead of checking the deck size in multiple places within the logic of the blackjack program, I decided to embed the check on the deck size within the deal() method - ie, every time a card is removed from the deck. As soon as the deck size gets below 15 (or the specified minimum deck size parameter for the constructor), the addDeck method is triggered. AddDeck() itself is realtively simple. Instead of creating another BJCardDeck or another deque, it simply appends to the existing deque the values 0-51, all the values a new card deck would have. Then, the deck is reshuffled to mix the new cards in better. The deal() method sets the index of the deck to remove at 0 (to always remove the top card). The value of this card is obtained by finding the value at the 0 index of the deck, and modding it by 13. Then, this card is erased from the deck. A relatively simple mapping is used to convert numbers 0-12 to values of 2-11 for blackjack. The mapping for the cards is as follows:
+  	  0 1 2 3 4 5 6 7 8 9 10 11 12
+  	  Q K 2 3 4 5 6 7 8 9 10 A  J
+This is the mapping that is used to return the correct value for each card that is pulled from the deck. 
+
+I had to make a few decisions on scenarios that wouldn't normally occur in actual blackjack (where A=1 or 11), such as the dealer, the player, or both receiving 2 aces via the deal, thus having a total of 22 off the bat. If both the dealer and the player got 22 initially, then I decided that this should be a push, since no one even had a turn and both technically lost. But if the user was dealt 22, then the dealer was declared the winner. However, if the dealer was dealt 22, then this would remeain hidden to the player, and the player would still go about deciding whether or not to hit or stay. If the user would stay under 21, then the user would automatically win, but if the user would go over 21, the dealer would still win. 
+
+I also added another parameter to the BJCardDeck constructor, a specification for the minimum number cards in the deck before triggering addDeck. I did this to make the class more general and versatile. 
+
+To verify components of my blackjack program, I had to alter my program so that I could have more information displayed and ensure that the correct logic was being executed. Instead of simply displaying the dealer's first card value, I displayed the dealer's running total as the dealer was deciding whether or not to take another card. Additionally, when the dealerTotal was < 17 (the dealer took another card), the next card that the dealer received from the deck was displayed, so that I could ensure that the dealerTotal was being computed correctly and that the dealer was taking another card only when the current total was < 17. This also allowed me to know my score as well as the dealer's final score, and I could ensure in every scenario that the correct winner was being declared. I tested this well over 100 times, which should be large enought to probabilistically ensure that each scenario occured. I also set the minCardDeck size to the mid 40's and put a print statement to ensure that a new deck was being added appropritately. However, It is important to note that I did not write code and then simply blindly test it and hope there were no errors. I took a lot of time to plan out the logic, exactly when the dealer should be the winner and under what circumstances the player would win. I then very carefully translated this to my program the best that I could. However, undoubtedly, small bugs creep in, and testing to surface different edge cases helped me to track down these bugs and verify my program. 
+
+
+
+MonkeySort
+----------
+When running my monkeySort program, I got the following results using a seeded random generator:
+	Number of shuffles required to put the deck back in order after an initial shuffle:
+	9 card deck: 414990
+	9 card deck: 225413
+	9 card deck: 186994
+	8 card deck: 3797
+	8 card deck: 50327
+	8 card deck: 11168
+	7 card deck: 3101
+	7 card deck: 5430
+	7 card deck: 557
+
+From the trend of these results, each extra card in the deck significantly impacts the amount of time it takes to sort the deck, by up a power of 10 (more tests would need to be done to say for sure). 
+
+
+
+
