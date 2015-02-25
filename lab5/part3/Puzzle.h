@@ -3,6 +3,8 @@
 
 /* Luke Garrison, Puzzle.h 
  * Templated Puzzle class
+ * The public methods are play() and display()
+ * The constructor requires that a valid file be specified as a starter for the puzzle
  */
 
 #include <iostream>
@@ -61,7 +63,6 @@ Puzzle<T>::Puzzle(int size) {
 		vector<T> row;							// add one row at a time
 		for(int i = 0; i < boardSize; i++) {	// create 1 vector per row
 			inFile >> singlePuzzlePiece;		// store next puzzle piece
-			cout << singlePuzzlePiece << endl;
 			row.push_back(singlePuzzlePiece);	// add piece to row
 		}
 		
@@ -86,7 +87,8 @@ void Puzzle<T>::play() {
 
 	cout << "Enter " << sentinel << " at any time to quit, and use a value of 0 to erase the specified cell" << endl;
 
-	while(!doQuit) {
+	// as long as use use didn't specify sentinel value AND there are more spaces to fill in:
+	while(!doQuit && countRemainingSpaces() != 0) {
 		// get valid row
 		while(!doQuit) {				
 			cout << "   Row: ";
@@ -132,7 +134,6 @@ void Puzzle<T>::play() {
 		// at this point, location and value must be valid, so place the piece and redisplay board		
 		puzzle[row][col] = val;
 		display();
-		if(countRemainingSpaces() == 0) break;	// player has won/finished puzzle
 	}
 
 	// check if player completed puzzle or not
@@ -225,28 +226,24 @@ int Puzzle<T>::countRemainingSpaces() {
 template <typename T>
 void Puzzle<T>::display() {
 	system("clear");	// clear screen so puzzle is displayed at the top
-
-	displayRowDashes();	// top boarder of puzzle		
-
+	
 	for(int i = 0; i < boardSize; i++) {	// iterate through every row
 
-		// add a row of dashes every sqrt(boardSize) rows
-		if(i % (int)sqrt(boardSize) == 0 && i != 0) {
+		// add a row of dashes every sqrt(boardSize) rows, including the top boarder 
+		if(i % (int)sqrt(boardSize) == 0) {
 			displayRowDashes();
 		}
 
 		// display each piece in the row
 		for(int j = 0; j < boardSize; j++) {	// display each piece in the row
-			if(j == 0) cout << "| ";			// display left boarder of puzzle
-			if(j % (int)sqrt(boardSize) == 0 && j != 0) cout << "| ";	// |'s every sqrt(boardSize) cols
+			if(j % (int)sqrt(boardSize) == 0) cout << "| ";	// |'s every sqrt(boardSize) cols, start at left
 			if((int)puzzle[i][j] ==	0) {		// if puzzle value is a 0, display a blank space instead
 				cout << "  ";					// display blank space since no piece yet
 			} else {
 				cout << puzzle[i][j] << " ";	// display piece followed by space
 			}
-			if(j == boardSize - 1) cout << "|";	// display right boarder of puzzle
 		}
-		cout << endl;	// add a newline after each row is displayed
+		cout << "|" << endl;	// add right boarder and a newline after each row is displayed
 	}
 	displayRowDashes();		// bottom boarder of puzzle
 }
@@ -261,29 +258,3 @@ void Puzzle<T>::displayRowDashes() {
 	}
 	cout << endl;			// newline to prepare for next row
 }
-
-/* backup
-void Puzzle<T>::display() {
-	for(int i = 0; i < boardSize; i++) {	// iterate through every row
-
-		// add a row of dashes every sqrt(boardSize) rows
-		if(i % (int)sqrt(boardSize) == 0 && i != 0) {
-			for(int a = 0; a < boardSize + 2; a++) {
-				cout << "- ";		// display a row of dashes
-			}
-			cout << endl;			// newline to prepare for next row
-		}
-
-		// display each piece in the row
-		for(int j = 0; j < boardSize; j++) {	// display each piece in the row
-			if(j % (int)sqrt(boardSize) == 0 && j != 0) cout << "| ";	// |'s every sqrt(boardSize) cols
-			if((int)puzzle[i][j] ==	0) {		// if puzzle value is a 0, display a blank space instead
-				cout << "  ";					// display blank space since no piece yet
-			} else {
-				cout << puzzle[i][j] << " ";	// display piece followed by space
-			}
-		}
-		cout << endl;	// add a newline after each row is displayed
-	}
-}
-*/

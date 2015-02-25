@@ -12,10 +12,10 @@ using namespace std;
 
 int main() {
 	cout << "Enter a file name for a sudoku puzzle:" << endl;
-	Puzzle<int> sudoku;
+	Puzzle<int> sudoku;	// instantiates a sudoku with a width and height of 9
 	sudoku.display();
 	
 	cout << "Enter a file name for a wordoku puzzle:" << endl;	
-	Puzzle<char> wordoku;
+	Puzzle<char> wordoku; // 9 x 9 by default
 	wordoku.display();
 }
