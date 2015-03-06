@@ -144,19 +144,6 @@ void Puzzle<T>::solve() {
 				}
 			}
 		}
-		/* display 3D vector *
-		for(int i = 0; i < boardSize; i++) {
-			for(int j = 0; j < boardSize; j++) {
-				cout << i+1 << "," << j+1 << ": ";
-				for(int k = 0; k < boardSize + 1; k++) {
-					cout << possibleVals[i][j][k] << " ";
-				}
-				cout << endl;
-			}
-		}
-	
-		display();
-*/
 	}
 	
 }
@@ -219,7 +206,7 @@ void Puzzle<T>::checkSingletons(int row, int col) {
 		}
 		nOccurances = 0; // reset to 0 for next check
 
-	/* mini-grid singletons *
+	/* mini-grid singletons */
 		int sqrtBoardSize = sqrt(boardSize);
 		int topLeftX = row / sqrtBoardSize * sqrtBoardSize;		// utilize integer division, truncation
 		int topLeftY = col / sqrtBoardSize * sqrtBoardSize;	
@@ -247,7 +234,7 @@ void Puzzle<T>::checkSingletons(int row, int col) {
 			// update possibleVals vector to reflect cell's value
 			markKnownCell(singletonRow, singletonCol, val);
 		}
-*/
+
 	}
 
 }
